@@ -17,7 +17,7 @@ dados = pd.DataFrame.from_dict(response.json())
 
 col1, col2 = st.columns(2)
 with col1:
-  st.metric("Soma das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
+  st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
 with col2: 
    st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]))
 
