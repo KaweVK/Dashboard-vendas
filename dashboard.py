@@ -32,6 +32,11 @@ receita_mensal['Mês'] = receita_mensal['Data da Compra'].dt.month_name().str.sl
 # Receita Categoria
 receita_categoria = dados.groupby('Categoria do Produto')[['Preço']].sum().sort_values('Preço', ascending=False)
 
+# Quantidade de Vendas por Estado
+qtd_vendas_estado = dados.groupby('Local da compra')[['Preço']].count()
+qtd_vendas_estado = dados.drop_duplicates(subset='Local da compra')[['Local da compra', 'lat', 'lon']].merge(qtd_vendas_estado, left_on='Local da compra', right_index=True).sort_values('Preço', ascending=False)
+qtd_vendas_estado = qtd_vendas_estado.rename(columns={'Preço':'Quantidade de Vendas'})
+
 ## Graficos
 fig_mapa_receita = px.scatter_geo(receita_estados,
                                    lat = 'lat',
@@ -41,7 +46,7 @@ fig_mapa_receita = px.scatter_geo(receita_estados,
                                    template = 'seaborn',
                                    hover_name = 'Local da compra',
                                    hover_data = {'lat':False, 'lon':False},
-                                   title = 'Receita por Estado',)
+                                   title = 'Receita por Estado')
 
 fig_receita_mensal = px.line(receita_mensal,
                              x = 'Mês',
@@ -59,8 +64,7 @@ fig_receita_estados = px.bar(receita_estados.head(),
                              x = 'Local da compra',
                              y = 'Preço',
                              text_auto = True,
-                             title = 'Top 5 Estados - Receita'
-                             )
+                             title = 'Top 5 Estados - Receita')                             
 
 fig_receita_estados.update_layout(xaxis_title = 'Estado', 
                                  yaxis_title = 'Receita')
@@ -71,18 +75,52 @@ fig_receita_categoria = px.bar(receita_categoria,
 
 fig_receita_categoria.update_layout(yaxis_title = 'Receita')
 
-## Visualizações
-col1, col2 = st.columns(2)
-with col1:
-  st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
-  st.plotly_chart(fig_mapa_receita, use_container_width=True)
-  st.plotly_chart(fig_receita_estados, use_container_width=True)
-with col2: 
-   st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
-   st.plotly_chart(fig_receita_mensal, use_container_width=True) 
-   st.plotly_chart(fig_receita_categoria, use_container_width=True)
+fig_mapa_vendas_estado = px.scatter_geo(qtd_vendas_estado,
+                                   lat = 'lat',
+                                   lon = 'lon',
+                                   scope='south america',
+                                   size = 'Quantidade de Vendas',
+                                   template = 'seaborn',
+                                   hover_name = 'Local da compra',
+                                   hover_data = {'lat':False, 'lon':False},
+                                   title = 'Quantidade de Vendas por Estado')
 
-st.dataframe(dados)
+#fig_vendas_estado = px.bar(qtd_vendas_estado.head(), x = 'Local da compra',  y = 'Quantidade de Vendas', text_auto = True)
+
+#fig_vendas_estado.update_layout(xaxis_title = 'Estado', yaxis_title = 'Quantidade de Vendas')
+
+## Visualizações no streamlit
+aba1, aba2, aba3 = st.tabs(['Receita', 'Vendas', 'Vendedores'])
+
+with aba1:
+   st.subheader("Análise da Receita")
+   col1, col2 = st.columns(2)
+   with col1:
+      st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
+      st.plotly_chart(fig_mapa_receita, use_container_width=True)
+      st.plotly_chart(fig_receita_estados, use_container_width=True)
+   with col2: 
+      st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
+      st.plotly_chart(fig_receita_mensal, use_container_width=True) 
+      st.plotly_chart(fig_receita_categoria, use_container_width=True)
+   st.dataframe(dados)
+
+with aba2:
+   st.subheader("Análise da Vendas")
+   col1, col2 = st.columns(2)
+   with col1:
+      st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
+      st.plotly_chart(fig_mapa_vendas_estado, use_container_width=True)
+   with col2: 
+      st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
+      
+with aba3:
+   st.subheader("Análise da Vendas")
+   col1, col2 = st.columns(2)
+   with col1:
+      st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
+   with col2: 
+      st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
 
 
 ## .venv/Scripts/activate
