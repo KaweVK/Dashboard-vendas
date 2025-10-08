@@ -37,6 +37,12 @@ qtd_vendas_estado = dados.groupby('Local da compra')[['Preço']].count()
 qtd_vendas_estado = dados.drop_duplicates(subset='Local da compra')[['Local da compra', 'lat', 'lon']].merge(qtd_vendas_estado, left_on='Local da compra', right_index=True).sort_values('Preço', ascending=False)
 qtd_vendas_estado = qtd_vendas_estado.rename(columns={'Preço':'Quantidade de Vendas'})
 
+# Quantidade de Vendas por Mês
+qtd_vendas_mensais = dados.set_index('Data da Compra').groupby(pd.Grouper(freq='M'))['Preço'].count().reset_index()
+qtd_vendas_mensais['Ano'] = qtd_vendas_mensais['Data da Compra'].dt.year
+qtd_vendas_mensais['Mês'] = qtd_vendas_mensais['Data da Compra'].dt.month_name().str.slice(stop=3)
+qtd_vendas_mensais = qtd_vendas_mensais.rename(columns={'Preço':'Quantidade de Vendas'})
+
 ## Graficos
 fig_mapa_receita = px.scatter_geo(receita_estados,
                                    lat = 'lat',
@@ -85,6 +91,15 @@ fig_mapa_vendas_estado = px.scatter_geo(qtd_vendas_estado,
                                    hover_data = {'lat':False, 'lon':False},
                                    title = 'Quantidade de Vendas por Estado')
 
+fig_vendas_mensais = px.line(qtd_vendas_mensais,
+                             x = 'Mês',
+                             y = 'Quantidade de Vendas',
+                             markers = True,
+                             range_y = (0, qtd_vendas_mensais.max()),
+                             color = 'Ano',
+                             line_dash = 'Ano',
+                             title = 'Quantidade de Vendas Mensal')
+
 #fig_vendas_estado = px.bar(qtd_vendas_estado.head(), x = 'Local da compra',  y = 'Quantidade de Vendas', text_auto = True)
 
 #fig_vendas_estado.update_layout(xaxis_title = 'Estado', yaxis_title = 'Quantidade de Vendas')
@@ -113,6 +128,7 @@ with aba2:
       st.plotly_chart(fig_mapa_vendas_estado, use_container_width=True)
    with col2: 
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
+      st.plotly_chart(fig_vendas_mensais, use_container_width=True)
       
 with aba3:
    st.subheader("Análise da Vendas")
