@@ -48,7 +48,7 @@ fig_receita_mensal = px.line(receita_mensal,
                              line_dash = 'Ano',
                              title = 'Receita Mensal')
 
-fig_receita_mensal.update_layout(xaxis_title = 'Mês',
+fig_receita_mensal.update_layout(xaxis_title = 'Mês', 
                                  yaxis_title = 'Receita')
 
 ## Visualizações
@@ -61,3 +61,7 @@ with col2:
    st.plotly_chart(fig_receita_mensal, use_container_width=True) 
 
 st.dataframe(dados)
+
+
+## .venv/Scripts/activate
+## treamlit run dashboard.py 
