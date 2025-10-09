@@ -21,8 +21,14 @@ regioes = ["Brasil", "Centro-Oeste", "Nordeste", "Norte", "Sudeste", "Sul"]
 st.sidebar.header("Filtros")
 regiao = st.sidebar.selectbox("Selecione a Região", regioes)
 
-if regiao == "Brasil":
-   regiao = ""
+if regiao == 'Brasil':
+   regiao = ''
+
+todos_ano = st.sidebar.checkbox('Dados de todo o periodo', value=True)
+if todos_ano:
+   ano = ''
+else:
+   ano = st.sidebar.slider('Ano', 2020, 2023)
 
 response = req.get(url)
 dados = pd.DataFrame.from_dict(response.json())
