@@ -153,7 +153,6 @@ with aba1:
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
       st.plotly_chart(fig_receita_mensal, use_container_width=True) 
       st.plotly_chart(fig_receita_categoria, use_container_width=True)
-   st.dataframe(dados)
 
 with aba2:
    st.subheader("Análise da Vendas")
