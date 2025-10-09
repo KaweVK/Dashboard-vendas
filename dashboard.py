@@ -30,10 +30,14 @@ if todos_ano:
 else:
    ano = st.sidebar.slider('Ano', 2020, 2023)
 
-response = req.get(url)
+query_string = {'regiao':regiao.lower(), 'ano':ano}
+response = req.get(url, params= query_string)
 dados = pd.DataFrame.from_dict(response.json())
 dados['Data da Compra'] = pd.to_datetime(dados['Data da Compra'], format = '%d/%m/%Y')
 
+filtro_vendedores = st.sidebar.multiselect('Selecione o(s) Vendedor(es)', dados['Vendedor'].unique())
+if filtro_vendedores:
+   dados = dados[dados['Vendedor'].isin(filtro_vendedores)]
 
 ## Tabelas 
 # Receita por Estado
