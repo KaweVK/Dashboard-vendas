@@ -103,7 +103,15 @@ fig_vendas_mensais = px.line(qtd_vendas_mensais,
                              line_dash = 'Ano',
                              title = 'Quantidade de Vendas Mensal')
 
-fig_vendas_categorias = px.bar(qtd_vendas_categoria.head(), text_auto = True, title = 'Quantidade de Vendas por Categoria')
+fig_vendas_estado = px.bar(qtd_vendas_estado.head(),
+                           x = 'Local da compra',
+                           y = 'Quantidade de Vendas',
+                           text_auto = True,
+                           title = 'Top 5 Estados - Quantidade de Vendas')
+
+fig_vendas_estado.update_layout(xaxis_title = 'Estado')
+
+fig_vendas_categorias = px.bar(qtd_vendas_categoria, text_auto = True, title = 'Quantidade de Vendas por Categoria')
 
 ## Visualizações no streamlit
 aba1, aba2, aba3 = st.tabs(['Receita', 'Vendas', 'Vendedores'])
@@ -127,6 +135,7 @@ with aba2:
    with col1:
       st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
       st.plotly_chart(fig_mapa_vendas_estado, use_container_width=True)
+      st.plotly_chart(fig_vendas_estado, use_container_width=True)
    with col2: 
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
       st.plotly_chart(fig_vendas_mensais, use_container_width=True)
