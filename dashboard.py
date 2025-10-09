@@ -46,6 +46,12 @@ qtd_vendas_mensais = qtd_vendas_mensais.rename(columns={'Preço':'Quantidade de 
 # Quantidade de Vendas por Categoria
 qtd_vendas_categoria = dados.groupby('Categoria do Produto')[['Preço']].count().sort_values('Preço', ascending=False)
 
+### Tabela de Quantidade de Vendas
+
+### Tabelas de Vendedores
+
+vendedores = pd.DataFrame(dados.groupby('Vendedor')['Preço'].agg(['sum', 'count']))
+
 ## Graficos
 fig_mapa_receita = px.scatter_geo(receita_estados,
                                    lat = 'lat',
@@ -144,15 +150,27 @@ with aba2:
    st.dataframe(qtd_vendas_mensais)
 
 with aba3:
+   qtd_vendedores = st.number_input("Quantidade de vendedores", 2, 10, 5)
    st.subheader("Análise da Vendas")
    col1, col2 = st.columns(2)
    with col1:
       st.metric("Receita das Vendas", formatar_valor(dados['Preço'].sum(), "R$"), border= True) 
+      fig_receita_vendedores = px.bar(vendedores[['sum']].sort_values('sum', ascending=False).head(qtd_vendedores), 
+                                      x = 'sum', 
+                                      y = vendedores[['sum']].sort_values('sum', ascending=False).head(qtd_vendedores).index,
+                                      text_auto=True,title=f'Top {qtd_vendedores} vendedores - Receita')
+      
+      fig_receita_vendedores.update_layout(xaxis_title = 'Receita de Vendas', yaxis_title = 'Vendedor')
+
+      st.plotly_chart(fig_receita_vendedores, use_container_width=True)
    with col2: 
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
 
-## source .venv/Scripts/activate
-## python.exe -m pip install --upgrade pip
-## pip install -r requirements.txt 
-## .venv/Scripts/activate
-## streamlit run dashboard.py 
+      fig_vendas_vendedores = px.bar(vendedores[['count']].sort_values('count', ascending=False).head(qtd_vendedores), 
+                                      x = 'count', 
+                                      y = vendedores[['count']].sort_values('count', ascending=False).head(qtd_vendedores).index,
+                                      text_auto=True,title=f'Top {qtd_vendedores} vendedores - Quantidade de Vendas')
+      
+      fig_vendas_vendedores.update_layout(xaxis_title = 'Quantidade de Vendas', yaxis_title = 'Vendedor')
+      
+      st.plotly_chart(fig_vendas_vendedores, use_container_width=True)
