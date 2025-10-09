@@ -14,6 +14,16 @@ def formatar_valor(valor, prefixo = ""):
 st.title("Sales Dashboard :shopping_cart:")
 
 url = "https://labdados.com/produtos"
+
+# Filtros
+regioes = ["Brasil", "Centro-Oeste", "Nordeste", "Norte", "Sudeste", "Sul"]
+
+st.sidebar.header("Filtros")
+regiao = st.sidebar.selectbox("Selecione a Região", regioes)
+
+if regiao == "Brasil":
+   regiao = ""
+
 response = req.get(url)
 dados = pd.DataFrame.from_dict(response.json())
 dados['Data da Compra'] = pd.to_datetime(dados['Data da Compra'], format = '%d/%m/%Y')
