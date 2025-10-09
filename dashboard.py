@@ -43,6 +43,9 @@ qtd_vendas_mensais['Ano'] = qtd_vendas_mensais['Data da Compra'].dt.year
 qtd_vendas_mensais['Mês'] = qtd_vendas_mensais['Data da Compra'].dt.month_name().str.slice(stop=3)
 qtd_vendas_mensais = qtd_vendas_mensais.rename(columns={'Preço':'Quantidade de Vendas'})
 
+# Quantidade de Vendas por Categoria
+qtd_vendas_categoria = dados.groupby('Categoria do Produto')[['Preço']].count().sort_values('Preço', ascending=False)
+
 ## Graficos
 fig_mapa_receita = px.scatter_geo(receita_estados,
                                    lat = 'lat',
@@ -100,9 +103,7 @@ fig_vendas_mensais = px.line(qtd_vendas_mensais,
                              line_dash = 'Ano',
                              title = 'Quantidade de Vendas Mensal')
 
-#fig_vendas_estado = px.bar(qtd_vendas_estado.head(), x = 'Local da compra',  y = 'Quantidade de Vendas', text_auto = True)
-
-#fig_vendas_estado.update_layout(xaxis_title = 'Estado', yaxis_title = 'Quantidade de Vendas')
+fig_vendas_categorias = px.bar(qtd_vendas_categoria.head(), text_auto = True, title = 'Quantidade de Vendas por Categoria')
 
 ## Visualizações no streamlit
 aba1, aba2, aba3 = st.tabs(['Receita', 'Vendas', 'Vendedores'])
@@ -129,7 +130,10 @@ with aba2:
    with col2: 
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
       st.plotly_chart(fig_vendas_mensais, use_container_width=True)
-      
+      st.plotly_chart(fig_vendas_categorias, use_container_width=True)
+   st.dataframe(qtd_vendas_estado)
+   st.dataframe(qtd_vendas_mensais)
+
 with aba3:
    st.subheader("Análise da Vendas")
    col1, col2 = st.columns(2)
