@@ -151,6 +151,8 @@ with aba3:
    with col2: 
       st.metric("Quantidade de Vendas", formatar_valor(dados.shape[0]), border= True)
 
-
+## source .venv/Scripts/activate
+## python.exe -m pip install --upgrade pip
+## pip install -r requirements.txt 
 ## .venv/Scripts/activate
-## treamlit run dashboard.py 
+## streamlit run dashboard.py 
