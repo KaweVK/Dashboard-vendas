@@ -11,6 +11,9 @@ response = req.get(url)
 dados = pd.DataFrame.from_dict(response.json())
 dados['Data da Compra'] = pd.to_datetime(dados['Data da Compra'], format = '%d/%m/%Y')
 
+with st.expander('Colunas'):
+    colunas = st.multiselect('Selecione as colunas', list(dados.columns), list(dados.columns))
+
 aba1 = st.tabs(['Dados'])
 
 st.sidebar.title('Filtros')
@@ -35,5 +38,16 @@ with st.sidebar.expander('Tipo de pagamento'):
 with st.sidebar.expander('Quantidade de parcelas'):
     qtd_parcelas = st.slider('Selecione a quantidade de parcelas', 1, 24, (1,24))
 
-st.dataframe(dados)
+query = '''
+Produto in @produtos and \
+@preco[0] <= Preço <= @preco[1] and \
+@data_compra[0] <= `Data da Compra` <= @data_compra[1]
+'''
+
+dados_filtrados = dados.query(query)
+dados_filtrados = dados_filtrados[colunas]
+
+st.dataframe(dados_filtrados)
+
+st.markdown(f'Número de registros: :blue[{dados_filtrados.shape[0]}] linhas e :red[{dados_filtrados.shape[1]}] colunas')
 
