@@ -14,8 +14,6 @@ dados['Data da Compra'] = pd.to_datetime(dados['Data da Compra'], format = '%d/%
 with st.expander('Colunas'):
     colunas = st.multiselect('Selecione as colunas', list(dados.columns), list(dados.columns))
 
-aba1 = st.tabs(['Dados'])
-
 st.sidebar.title('Filtros')
 with st.sidebar.expander('Nome do produto'):
     produtos = st.multiselect('Selecione os produtos', dados['Produto'].unique(), dados['Produto'].unique())
