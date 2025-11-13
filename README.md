@@ -15,3 +15,7 @@ Dashboard criado para fins de estudos sobre Análise de Dados de um conjunto de 
 - Pandas
 - Requests
 - Streamlit
+
+## Link para acesso ao Dashboard 🔗
+
+dashboard-vendas-01.streamlit.app/
