@@ -18,5 +18,5 @@ Dashboard criado para fins de estudos sobre Análise de Dados de um conjunto de 
 
 ## Link para acesso ao Dashboard 🔗
 
-[Dashboar](dashboard-vendas-01.streamlit.app/)
+[Dashboar](https://dashboard-vendas-01.streamlit.app/)
 
