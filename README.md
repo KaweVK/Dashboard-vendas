@@ -5,8 +5,8 @@ Dashboard criado para fins de estudos sobre Análise de Dados de um conjunto de 
 ## Aprendizado do estudo ✍️
 
 - Criar o ambiente para inicar a codificar
-- Uso das principais binliotecas
-- Criação de dashboard interativo com gráficos e filtors
+- Uso das principais bibliotecas
+- Criação de dashboard interativo com gráficos e filtros
 - Deploy da aplicação usando streamlit 
 
 ## Bibliotecas usadas 🏛️
